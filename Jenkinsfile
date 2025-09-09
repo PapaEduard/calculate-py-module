@@ -45,11 +45,6 @@ pipeline {
                   bandit -r src -f json -o ${REPORT_DIR}/bandit.json
                 """
             }
-            post {
-                always {
-                    archiveArtifacts artifacts: 'reports/bandit.json', fingerprint: true
-                }
-            }
         }
 
         stage('Run Unit Tests') {
@@ -61,12 +56,6 @@ pipeline {
                   mkdir -p ${REPORT_DIR}
                   pytest --junitxml=${REPORT_DIR}/tests.xml
                 """
-            }
-            post {
-                always {
-                    junit  allowEmptyResults: true, testResults: 'reports/tests.xml'
-                    archiveArtifacts artifacts: 'reports/tests.xml', fingerprint: true
-                }
             }
         }
 
@@ -80,11 +69,6 @@ pipeline {
                   mv dist/* ${DIST_DIR}/
                 """
             }
-            post {
-                always {
-                    archiveArtifacts artifacts: 'dist/*', fingerprint: true
-                }
-            }
         }
 
         stage('Package Module') {
@@ -94,11 +78,6 @@ pipeline {
                   cd ${DIST_DIR}
                   tar czf ${WORKSPACE}/calculator_module.tar.gz *
                 """
-            }
-            post {
-                always {
-                    archiveArtifacts artifacts: 'calculator_module.tar.gz', fingerprint: true
-                }
             }
         }
     }
